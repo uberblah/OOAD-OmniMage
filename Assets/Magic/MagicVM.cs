@@ -21,11 +21,6 @@ public class MagicVM : MonoBehaviour
         ip = scroll.GetEnumerator();
     }
 
-    public bool IsRunning()
-    {
-        return scroll != null;
-    }
-
     public object Pop()
     {
         return stack.Pop();
@@ -34,6 +29,11 @@ public class MagicVM : MonoBehaviour
     public void Push(object o)
     {
         stack.Push(o);
+    }
+
+    public static void Execute(MagicVM vm)
+    {
+        vm.Execute();
     }
 
     public void Execute()
@@ -54,5 +54,6 @@ public class MagicVM : MonoBehaviour
             ip.Current.op(this);
             if (!ip.MoveNext()) scroll = null;
         }
+        else Destroy(this);
     }
 }
