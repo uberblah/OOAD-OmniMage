@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class MagicSymbol : MonoBehaviour
+public struct MagicSymbol
 {
-    Texture2D glyph;
-    MagicVM.Operation op;
+    public Texture2D glyph;
+    public MagicVM.Operation op;
 }

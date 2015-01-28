@@ -15,8 +15,27 @@ public class MagicVM : MonoBehaviour
         ip = scroll.GetEnumerator();
     }
 
-    protected virtual void Update()
+    public bool IsRunning()
     {
-        //TODO: execute a single instruction
+        return scroll != null;
+    }
+
+    public object Pop()
+    {
+        return stack.Pop();
+    }
+
+    public void Push(object o)
+    {
+        stack.Push(o);
+    }
+
+    void Update()
+    {
+        if (scroll != null)
+        {
+            ip.Current.op(this);
+            if (!ip.MoveNext()) scroll = null;
+        }
     }
 }
