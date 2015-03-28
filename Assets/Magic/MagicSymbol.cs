@@ -3,6 +3,6 @@ using System.Collections;
 
 public struct MagicSymbol
 {
-    public Texture2D glyph;
+    public Sprite glyph;
     public MagicVM.Operation op;
 }
