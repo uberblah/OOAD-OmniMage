@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public struct MagicSymbol
+public struct Symbol
 {
     public Sprite glyph;
-    public MagicVM.Operation op;
+    public Spell.Operation op;
 }

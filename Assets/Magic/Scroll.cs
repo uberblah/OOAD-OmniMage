@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class MagicScroll : List<MagicSymbol>
+public class Scroll : List<Symbol>
 {
 
 }

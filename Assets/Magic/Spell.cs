@@ -1,21 +1,21 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class MagicVM : MonoBehaviour
+public class Spell : MonoBehaviour
 {
-    public delegate void Operation(MagicVM vm);
+    public delegate void Operation(Spell vm);
 
     protected Stack stack = new Stack();
-    protected MagicScroll scroll = null;
-    protected MagicScroll.Enumerator ip;
+    protected Scroll scroll = null;
+    protected Scroll.Enumerator ip;
     public Operation onFailure = DefaultFailure;
 
-    static void DefaultFailure(MagicVM vm)
+    static void DefaultFailure(Spell vm)
     {
         Debug.Log(vm.Pop());
     }
 
-    public void SetScroll(MagicScroll newScroll)
+    public void SetScroll(Scroll newScroll)
     {
         scroll = newScroll;
         ip = scroll.GetEnumerator();
@@ -31,7 +31,7 @@ public class MagicVM : MonoBehaviour
         stack.Push(o);
     }
 
-    public static void Execute(MagicVM vm)
+    public static void Execute(Spell vm)
     {
         vm.Execute();
     }
