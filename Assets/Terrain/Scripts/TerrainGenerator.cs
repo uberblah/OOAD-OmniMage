@@ -14,6 +14,7 @@ public class TerrainGenerator : MonoBehaviour {
 	// you can change this if here and the spawn method
 	// if you need terrain at different heights
 	public int spawnYPos = 0;
+	public int chunkCount = 0;
 	
 	// random number that is used for selecting the terrain
 	int randomChoice;
@@ -51,7 +52,7 @@ public class TerrainGenerator : MonoBehaviour {
 	// spawn terrain based on the rand int passed by the update method
 	void SpawnTerrain(int rand)
 	{
-		if (rand >= 1 && rand <= 5)
+		if (rand >= 1 && rand <= 5 )
 		{
 			Instantiate(shortTerrain[Random.Range(0,shortTerrain.Length)],
 			new Vector3(lastPosition, spawnYPos, 0), Quaternion.Euler(0, 0, 0));
