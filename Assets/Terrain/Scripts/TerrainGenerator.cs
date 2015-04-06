@@ -54,17 +54,21 @@ public class TerrainGenerator : MonoBehaviour {
 	{
 		if (rand >= 1 && rand <= 5 )
 		{
-			Instantiate(shortTerrain[Random.Range(0,shortTerrain.Length)],
+			var chunkPtr = Instantiate(shortTerrain[Random.Range(0,shortTerrain.Length)],
 			new Vector3(lastPosition, spawnYPos, 0), Quaternion.Euler(0, 0, 0));
+			chunkPtr.name = "chunk_"+chunkCount.ToString();
 			// same as start spawn position as starting terrain
 			// is the same length as the rest of the terrain prefabs
+			chunkCount += 1;
 			lastPosition += 5.6f;
 		}
 		
 		if (rand >= 5 && rand <= 10)
 		{
-			Instantiate(mediumTerrain[Random.Range(0,mediumTerrain.Length)], 
+			var chunkPtr = Instantiate(mediumTerrain[Random.Range(0,mediumTerrain.Length)], 
             new Vector3(lastPosition, spawnYPos, 0), Quaternion.Euler(0, 0, 0));
+			chunkPtr.name = "chunk_"+chunkCount.ToString();
+			chunkCount += 1;
 			lastPosition += 11.2f;
 		}
 		
@@ -72,8 +76,10 @@ public class TerrainGenerator : MonoBehaviour {
 			// the platform terrain is more difficult to traverse
 			// so we will lessen the chances of it spawning
 		{
-			Instantiate(longTerrain[Random.Range(0,longTerrain.Length)], 
+			var chunkPtr = Instantiate(longTerrain[Random.Range(0,longTerrain.Length)], 
             new Vector3(lastPosition, spawnYPos, 0), Quaternion.Euler(0, 0, 0));
+			chunkPtr.name = "chunk_"+chunkCount.ToString();
+			chunkCount += 1;
 			lastPosition += 22.4f;
 		}
 		
