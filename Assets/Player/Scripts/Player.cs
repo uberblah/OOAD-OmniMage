@@ -2,10 +2,11 @@
 using System.Collections;
 
 public class Player : MonoBehaviour, InputEventListener {
+	public Sprite left, right, forward;
+	public Animation[] anims;
 	private GameObject objPlayer;
 	private GameObject objCamera;
-	public Sprite left, right, forward;
-	private float playerHeight;
+	private Vector2 playerSize;
 
 	public void OnEvent(InputEvent inputevent) {
 		switch (inputevent.eventType) {
@@ -16,7 +17,7 @@ public class Player : MonoBehaviour, InputEventListener {
 			Move (inputevent.x, inputevent.y);
 			break;
 		}
-		print(inputevent);
+		//print(inputevent);
 	}
 
 	// Use this for initialization
@@ -24,7 +25,8 @@ public class Player : MonoBehaviour, InputEventListener {
 	{
 		objPlayer = (GameObject) GameObject.FindWithTag("Player");
 		objCamera = (GameObject) GameObject.FindWithTag("MainCamera");
-		playerHeight = GetComponent<Collider2D>().bounds.extents.y;
+		playerSize = GetComponent<Collider2D>().bounds.extents;
+
 		Register ();
 		
 
@@ -41,27 +43,40 @@ public class Player : MonoBehaviour, InputEventListener {
 	void Update ()
 	{
 		UpdateCamera ();
+		Animator anim = GetComponent<Animator>();
+		anim.SetInteger ("Direction", 0);
+		//SpriteRenderer renderer = GetComponent<SpriteRenderer> ();
+		//renderer.sprite = right;
 	}
 
 	void Jump() {
 		Rigidbody2D rbody = GetComponent<Rigidbody2D> ();
 		// Do not allow the player to jump if they are not close enough to the ground
-		if (Input.GetKeyDown (KeyCode.Space) && IsGrounded ()) {
+		if (MinDistance(-Vector3.up) < playerSize.y + .25) {
 			// Apply a one time vertical force to emulate jumping
 			rbody.AddForce (new Vector2 (0.0f, 300f));
 		}
 	}
 
 	void Move(float x, float y) {
-		SpriteRenderer renderer = GetComponent<SpriteRenderer> ();
+		//SpriteRenderer renderer = GetComponent<SpriteRenderer> ();
+		Animator anim = GetComponent<Animator>();
 
-		Rigidbody2D rbody = GetComponent<Rigidbody2D> ();
-		rbody.velocity = new Vector2(x*5, y+rbody.velocity.y);
-		if (rbody.velocity.x >= 0) {
-			renderer.sprite = right;
+		//Rigidbody2D rbody = GetComponent<Rigidbody2D> ();
+		//rbody.velocity = new Vector2(x*5, y+rbody.velocity.y);
+		if (x >= 0) {
+			//renderer.sprite = right;
+			anim.SetInteger("Direction", 1);
+			if (MinDistance (Vector2.right) < playerSize.x*1.5) 
+				return;
 		} else {
-			renderer.sprite = left;
+			anim.SetInteger("Direction", -1);
+			if (MinDistance (-Vector2.right) < playerSize.x*1.5) 
+				return;
+			//renderer.sprite = left;
 		}
+		transform.position += new Vector3(x/10, y, 0);
+
 		UpdateCamera ();
 	}
 
@@ -71,8 +86,36 @@ public class Player : MonoBehaviour, InputEventListener {
 		                                           transform.position.y,transform.position.z-10);
 	}
 
+	float MinDistance(Vector2 direction) {
+		Vector3 adjustment = new Vector3(0,0,0);
+
+		if (direction.x != 0) {
+			adjustment.y = 1;
+			adjustment.y *= playerSize.y/2;
+		}
+		if (direction.y != 0) {
+			adjustment.x = 1;
+			adjustment.x *= playerSize.x/2;
+		}
+
+
+		float min = RaycastDirection(transform.position-adjustment, direction, 10);
+		min = Mathf.Min (min, RaycastDirection (transform.position, direction, 10));
+		min = Mathf.Min (min, RaycastDirection (transform.position+adjustment, direction, 10));
+
+		return min;
+	}
+
+	float RaycastDirection(Vector3 pos, Vector2 dir, float maxdist) {
+		RaycastHit2D hit = Physics2D.Raycast(pos, dir, maxdist);
+		if (hit.collider == null) {
+			return float.PositiveInfinity;
+		}
+		return hit.distance;
+	}
+
 	bool IsGrounded() {
-		RaycastHit2D hit = Physics2D.Raycast(transform.position, -Vector3.up, playerHeight + 0.25f);
+		RaycastHit2D hit = Physics2D.Raycast(transform.position, -Vector2.up, playerSize.y + 0.25f);
 		return hit.collider != null;
 	}
 
