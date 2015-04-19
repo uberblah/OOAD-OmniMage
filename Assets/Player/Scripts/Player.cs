@@ -64,15 +64,17 @@ public class Player : MonoBehaviour, InputEventListener {
 
 		//Rigidbody2D rbody = GetComponent<Rigidbody2D> ();
 		//rbody.velocity = new Vector2(x*5, y+rbody.velocity.y);
-		if (x >= 0) {
-			//renderer.sprite = right;
-			anim.SetInteger("Direction", 1);
-			if (MinDistance (Vector2.right) < playerSize.x*1.5) 
-				return;
-		} else {
-			anim.SetInteger("Direction", -1);
-			if (MinDistance (-Vector2.right) < playerSize.x*1.5) 
-				return;
+		if (IsGrounded() == true){
+			if (x >= 0) {
+				//renderer.sprite = right;
+				anim.SetInteger("Direction", 1);
+				if (MinDistance (Vector2.right) < playerSize.x*1.5) 
+					return;
+			} else {
+				anim.SetInteger("Direction", -1);
+				if (MinDistance (-Vector2.right) < playerSize.x*1.5) 
+					return;
+			}
 			//renderer.sprite = left;
 		}
 		transform.position += new Vector3(x/10, y, 0);

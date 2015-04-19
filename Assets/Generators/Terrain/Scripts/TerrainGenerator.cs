@@ -18,6 +18,8 @@ public class TerrainGenerator : MonoBehaviour {
 	
 	void Start()
 	{
+		//set our RNG to be seeded
+		Random.seed = seed;
 		// get the starting game chunk
 		// pair camera to camera reference
 		cam = GameObject.Find("Main Camera");
@@ -30,14 +32,12 @@ public class TerrainGenerator : MonoBehaviour {
 	void Update()
 	{
 		//Terrain Constructor
-		if (cam.transform.position.x >= spawnXPos-5 && canSpawn == true)
+		if (cam.transform.position.x >= spawnXPos-16 && canSpawn == true)
 		{
 			// turn off spawning until ready to spawn again
 			canSpawn = false;
-			// we choose the random number that will determine what terrain is spawned
-			//randomChoice = Random.Range(1, 10);
 			// SpawnTerrain is called and passed the randomchoice number
-			SpawnTerrain(0);
+			SpawnTerrain(Random.Range(0,prefabs.Length));
 		}
 
 
@@ -47,7 +47,7 @@ public class TerrainGenerator : MonoBehaviour {
 	void SpawnTerrain(int rand)
 	{
 		UpdateChunkNames ();
-		var chunkPtr = Instantiate(prefabs[0],
+		var chunkPtr = Instantiate(prefabs[rand],
 		new Vector3(spawnXPos, spawnYPos, 0), Quaternion.Euler(0, 0, 0));
 		chunkPtr.name = "Last Chunk";
 		// same as start spawn position as starting terrain
