@@ -2,7 +2,9 @@
 using System.Collections;
 
 public class HeartRender : MonoBehaviour {
-	public int currentHealth = 6;
+
+	private int currentHealth;
+	private PlayerDamage playerDamage;
 
 	public Sprite fullHeart;
 	public Sprite halfHeart;
@@ -11,8 +13,14 @@ public class HeartRender : MonoBehaviour {
 	public GameObject heartOne;
 	public GameObject heartTwo;
 	public GameObject heartThree;
+
+	void Start (){
+		GameObject player = GameObject.FindWithTag("Player");
+		playerDamage = player.GetComponent<PlayerDamage>();
+	}
 	// Update is called once per frame
 	void Update () {
+		currentHealth = playerDamage.GetHealth();
 		switch (currentHealth){
 			case 6:
 				heartOne.GetComponent<SpriteRenderer>().sprite = fullHeart;
