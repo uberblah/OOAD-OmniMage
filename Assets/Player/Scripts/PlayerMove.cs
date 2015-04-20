@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Player : MonoBehaviour, InputEventListener {
+public class PlayerMove : MonoBehaviour, InputEventListener {
 	public Sprite left, right, forward;
 	public Animation[] anims;
 	private GameObject objPlayer;
