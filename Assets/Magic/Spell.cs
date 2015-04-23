@@ -104,7 +104,7 @@ public class Spell
         if (s.Size() < 1) return;
         object obj = s.Pop();
         if (obj == null) return;
-        Player p = obj as Player;
+        PlayerMove p = obj as PlayerMove;
         if (p == null) //if this isn't cast on a player
         {
             GameObject o = obj as GameObject;
@@ -131,7 +131,7 @@ public class Spell
     //push the object the cursor is over
     public static void OpPushPointed(Spell s)
     {
-        Player p = s.userdata as Player;
+        PlayerMove p = s.userdata as PlayerMove;
         Rigidbody2D rb = p.gameObject.GetComponent<Rigidbody2D>();
         Vector3 mousepos = Input.mousePosition;
         mousepos.z = 0.0f;
