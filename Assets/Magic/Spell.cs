@@ -40,6 +40,11 @@ public class Spell
         stack.Push(o);
     }
 
+    public int Size()
+    {
+        return stack.Count;
+    }
+
     public static void Execute(Spell vm)
     {
         vm.Execute();
@@ -96,10 +101,13 @@ public class Spell
 
     public static void OpLaunch(Spell s)
     {
-        Player p = s.Pop() as Player;
-        if (p == null) //if this isn't cast by a player
+        if (s.Size() < 1) return;
+        object obj = s.Pop();
+        if (obj == null) return;
+        Player p = obj as Player;
+        if (p == null) //if this isn't cast on a player
         {
-            GameObject o = s.Pop() as GameObject;
+            GameObject o = obj as GameObject;
             Rigidbody2D rb = o.GetComponent<Rigidbody2D>();
             if (rb == null) return;
             Vector3 targetpos = o.GetComponent<Transform>().position;
@@ -131,7 +139,10 @@ public class Spell
         Vector3 bodypos = p.gameObject.GetComponent<Transform>().position;
         bodypos.z = 0.0f;
         Vector2 dir = (mousepos - bodypos).normalized;
-        RaycastHit2D hit = Physics2D.RaycastAll(new Vector2(bodypos.x, bodypos.y), dir, 1000.0f)[0];
+        RaycastHit2D[] hits = Physics2D.RaycastAll(new Vector2(bodypos.x, bodypos.y), dir, 1000.0f);
+        if (hits == null) return;
+        if (hits.Length < 1) return;
+        RaycastHit2D hit = hits[0];
         s.Push(hit.collider.gameObject);
     }
 }

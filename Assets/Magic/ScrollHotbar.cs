@@ -17,9 +17,11 @@ public class ScrollHotbar : MonoBehaviour
             scrolls[i] = new Scroll();
         }
         //write the first default script
+        scrolls[0].Add(new Symbol(null, Spell.OpPushUserData));
         scrolls[0].Add(new Symbol(null, Spell.OpLaunch));
         //write the second default script
-
+        scrolls[1].Add(new Symbol(null, Spell.OpPushPointed));
+        scrolls[1].Add(new Symbol(null, Spell.OpLaunch));
     }
 
     public void select(int idx)
