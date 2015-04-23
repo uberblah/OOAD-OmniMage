@@ -39,5 +39,39 @@ public class InputEventManager : MonoBehaviour {
 		if (Input.GetKeyDown(KeyCode.Space)) {
 			Publish (InputEvent.NewJumpEvent());
 		}
+        if (Input.GetKeyDown(KeyCode.Alpha1)) {
+            Publish(InputEvent.NewSelectEvent(0));
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2)) {
+            Publish(InputEvent.NewSelectEvent(1));
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha3)) {
+            Publish(InputEvent.NewSelectEvent(2));
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha4)) {
+            Publish(InputEvent.NewSelectEvent(3));
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha5)) {
+            Publish(InputEvent.NewSelectEvent(4));
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha6)) {
+            Publish(InputEvent.NewSelectEvent(5));
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha7)) {
+            Publish(InputEvent.NewSelectEvent(6));
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha8)) {
+            Publish(InputEvent.NewSelectEvent(7));
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha9))
+        {
+            Publish(InputEvent.NewSelectEvent(8));
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha0)) {
+            Publish(InputEvent.NewSelectEvent(9));
+        }
+        if (Input.GetMouseButtonDown(0)) {
+            Publish(InputEvent.NewCastEvent());
+        }
 	}
 }
