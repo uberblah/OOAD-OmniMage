@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Spell : MonoBehaviour
+public class Spell
 {
     public delegate void Operation(Spell vm);
 
@@ -9,15 +9,24 @@ public class Spell : MonoBehaviour
     protected Scroll scroll = null;
     protected Scroll.Enumerator ip;
     public Operation onFailure = DefaultFailure;
+    public Operation onFinish = DefaultFinish;
+
+    public Object userdata;
 
     static void DefaultFailure(Spell vm)
     {
         Debug.Log(vm.Pop());
     }
 
+    static void DefaultFinish(Spell vm)
+    {
+        Debug.Log(vm.ToString() + " has finished!\n");
+    }
+
     public void SetScroll(Scroll newScroll)
     {
         scroll = newScroll;
+        if (scroll == null) return;
         ip = scroll.GetEnumerator();
     }
 
@@ -47,13 +56,82 @@ public class Spell : MonoBehaviour
         }
     }
 
-    void Update()
+    public void Run()
     {
         if (scroll != null)
         {
-            ip.Current.op(this);
-            if (!ip.MoveNext()) scroll = null;
+            while (ip.MoveNext())
+            {
+                ip.Current.op(this);
+            }
+            scroll = null;
+            onFinish(this);
         }
-        else Destroy(this);
+    }
+
+    public bool IsRunning()
+    {
+        return scroll != null;
+    }
+
+    public override string ToString()
+    {
+        return "<Spell: " + (IsRunning() ? "Running " + scroll.ToString() : "Waiting") + ">";
+    }
+
+    public static void OpPushUserData(Spell s)
+    {
+        s.Push(s.userdata);
+    }
+
+    public static void OpPrintTop(Spell s)
+    {
+        Debug.Log(s.Pop());
+    }
+
+    public static void OpNop(Spell s)
+    {
+        
+    }
+
+    public static void OpLaunch(Spell s)
+    {
+        Player p = s.Pop() as Player;
+        if (p == null) //if this isn't cast by a player
+        {
+            GameObject o = s.Pop() as GameObject;
+            Rigidbody2D rb = o.GetComponent<Rigidbody2D>();
+            if (rb == null) return;
+            Vector3 targetpos = o.GetComponent<Transform>().position;
+            targetpos.z = 0.0f;
+            Vector3 bodypos = p.gameObject.GetComponent<Transform>().position;
+            bodypos.z = 0.0f;
+            rb.velocity = (targetpos - bodypos).normalized * 10.0f;
+        }
+        else
+        {
+            Rigidbody2D rb = p.gameObject.GetComponent<Rigidbody2D>();
+            if (rb == null) return;
+            Vector3 mousepos = Input.mousePosition;
+            mousepos.z = 0.0f;
+            Vector3 bodypos = p.gameObject.GetComponent<Transform>().position;
+            bodypos.z = 0.0f;
+            bodypos = Camera.main.WorldToScreenPoint(bodypos);
+            rb.velocity = (mousepos - bodypos).normalized * 10.0f;
+        }
+    }
+    //push the object the cursor is over
+    public static void OpPushPointed(Spell s)
+    {
+        Player p = s.userdata as Player;
+        Rigidbody2D rb = p.gameObject.GetComponent<Rigidbody2D>();
+        Vector3 mousepos = Input.mousePosition;
+        mousepos.z = 0.0f;
+        mousepos = Camera.main.ScreenToWorldPoint(mousepos);
+        Vector3 bodypos = p.gameObject.GetComponent<Transform>().position;
+        bodypos.z = 0.0f;
+        Vector2 dir = (mousepos - bodypos).normalized;
+        RaycastHit2D hit = Physics2D.RaycastAll(new Vector2(bodypos.x, bodypos.y), dir, 1000.0f)[0];
+        s.Push(hit.collider.gameObject);
     }
 }

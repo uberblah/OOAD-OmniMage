@@ -4,6 +4,7 @@ using System.Collections;
 public class Player : MonoBehaviour, InputEventListener {
 	public Sprite left, right, forward;
 	public Animation[] anims;
+    public ScrollHotbar hotbar = null;
 	private GameObject objPlayer;
 	private GameObject objCamera;
 	private Vector2 playerSize;
@@ -16,6 +17,12 @@ public class Player : MonoBehaviour, InputEventListener {
 		case InputType.Walk:
 			Move (inputevent.x, inputevent.y);
 			break;
+        case InputType.Select:
+            Select(inputevent.idx);
+            break;
+        case InputType.Cast:
+            Cast();
+            break;
 		}
 		//print(inputevent);
 	}
@@ -26,10 +33,7 @@ public class Player : MonoBehaviour, InputEventListener {
 		objPlayer = (GameObject) GameObject.FindWithTag("Player");
 		objCamera = (GameObject) GameObject.FindWithTag("MainCamera");
 		playerSize = GetComponent<Collider2D>().bounds.extents;
-
 		Register ();
-		
-
 	}
 
 	void Register ()
@@ -79,6 +83,20 @@ public class Player : MonoBehaviour, InputEventListener {
 
 		UpdateCamera ();
 	}
+
+    void Cast()
+    {
+        Spell spell = new Spell();
+        spell.SetScroll(hotbar.get());
+        spell.userdata = this;
+        spell.onFinish = Spell.OpNop;
+        spell.Run();
+    }
+
+    void Select(int idx)
+    {
+        if(hotbar != null) hotbar.select(idx);
+    }
 
 	void UpdateCamera() {
 		// Update the camera
